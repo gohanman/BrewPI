@@ -1,5 +1,5 @@
 from BrewPi.data.database import db_session
-from BrewPi.data.models import Recipes, Steps, Kettles
+from BrewPi.data.models import Recipes, Steps, Vessels
 from threading import Event
 from multiprocessing import Process, Pipe
 
@@ -17,8 +17,8 @@ class TestingBackend(Process):
         print "Backend PID: " + str(os.getpid())
         print "Initializing Data"
         try:
-            k1 = Kettles(
-                kettleID=1, 
+            k1 = Vessels(
+                vesselID=1, 
                 name="HLT",
                 currentVolume=0, 
                 targetVolume=0,
@@ -28,8 +28,8 @@ class TestingBackend(Process):
                 )
             db_session.add(k1);
 
-            k2 = Kettles(
-                kettleID=2, 
+            k2 = Vessels(
+                vesselID=2, 
                 name="Mash",
                 currentVolume=0, 
                 targetVolume=0,
@@ -39,8 +39,8 @@ class TestingBackend(Process):
                 )
             db_session.add(k2);
 
-            k3 = Kettles(
-                kettleID=3, 
+            k3 = Vessels(
+                vesselID=3, 
                 name="Boil",
                 currentVolume=0, 
                 targetVolume=0,

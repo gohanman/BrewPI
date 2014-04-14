@@ -1,6 +1,6 @@
 from flask import send_from_directory, request, redirect, url_for, abort, render_template
 from BrewPi.data.database import db_session
-from BrewPi.data.models import Recipes, Steps, Kettles
+from BrewPi.data.models import Recipes, Steps, Vessels
 from json_out import json_as_configured
 from sqlalchemy import or_
 from app import app
@@ -9,9 +9,9 @@ from app import app
 def index():
 	return send_from_directory(app.static_folder,'api.html')
 
-@app.route('/kettle/<id>')
+@app.route('/vessel/<id>')
 def show_kettle(id):
-    kettle = Kettles.query.get(id);
+    kettle = Vessels.query.get(id);
     if kettle == None:
         return json_as_configured({'ErrorCode':404,'ErrorMsg':'Item not found'})
     else:
@@ -38,16 +38,16 @@ def show_recipe(id):
             r['currentStep'] = step.serialize()
         return json_as_configured(r)
 
-@app.route('/kettle/', methods=['GET', 'POST'])
+@app.route('/vessel/', methods=['GET', 'POST'])
 def write_kettle():
     if request.method == 'GET':
         if request.args.get('id'):
-            return redirect(url_for('show_kettle', id=request.args.get('id')))
+            return redirect(url_for('show_vessel', id=request.args.get('id')))
         else:
             abort(400)
 
-    kettle = Kettles(
-                 kettleID=request.json.get('kettleID', None),
+    kettle = Vessels(
+                 vesselID=request.json.get('vesselID', None),
                  name=request.json.get('name', '')
                  )
     db_session.add(kettle)
