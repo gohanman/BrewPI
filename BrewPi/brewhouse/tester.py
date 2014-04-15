@@ -1,5 +1,5 @@
 from BrewPi.data.database import db_session
-from BrewPi.data.models import Recipes, Steps, Vessels
+from BrewPi.data.models import Recipes, Steps, Vessels, Pumps, Valves, Heaters, Coolers, Plumbing
 from threading import Event
 from multiprocessing import Process, Pipe
 

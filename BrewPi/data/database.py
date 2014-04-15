@@ -13,5 +13,7 @@ Base = declarative_base()
 Base.query = db_session.query_property()
 
 def init_db():
-    from models import Kettles, Steps, Recipes, RecipeStepMap, StepMap
+    from BrewPi.data.models import *
     Base.metadata.create_all(bind=engine)
+
+init_db()
