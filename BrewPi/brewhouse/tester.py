@@ -105,18 +105,28 @@ class TestingBackend(Process):
             class_name = v.thermoDeviceDriver
             obj = getattr(temperature, class_name)
             my_sensors[v.vesselID] = obj(v.thermoDeviceFile)
+            v.currentTemperature = my_sensors[v.vesselID].read()
 
             class_name = v.volumeDeviceDriver
             obj = getattr(volume, class_name)
             my_volume[v.vesselID] = obj(v.volumeDeviceFile)
+            v.currentVolume = my_volume[v.vesselID].read()
+
+            db_session.commit()
+
         while not(self.stop.is_set()):
 
             for v,s in my_sensors.iteritems():
-                print str(v) + ":T" + str(s.read())
+                next = s.read()
+                Vessels.query.get(v).currentTemperature=next
+                print str(v) + ":T" + str(next)
 
             for v,s in my_volume.iteritems():
-                print str(v) + ":V" + str(s.read())
+                next = s.read()
+                Vessels.query.get(v).currentVolume=next
+                print str(v) + ":V" + str(next)
 
+            db_session.commit()
             self.stop.wait(5)
 
         print "Tester Exiting"
