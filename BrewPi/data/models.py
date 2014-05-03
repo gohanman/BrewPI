@@ -21,6 +21,10 @@ class Vessels(Base):
     heaterID = Column(Integer, ForeignKey('Heaters.heaterID'))
     positionX = Column(Integer)
     positionY = Column(Integer)
+    thermoDeviceFile = Column(String(25))
+    thermoDeviceDriver = Column(String(25))
+    volumeDeviceFile = Column(String(25))
+    volumeDeviceDriver = Column(String(25))
 
     def __repr__(self):
         return '<Vessel %r>' % (self.vesselID)
@@ -41,6 +45,10 @@ class Vessels(Base):
         repr['fired'] = str(self.fired)
         repr['heaterID'] = { 'heat_input' : str(self.heaterID) }
         repr['position'] = { 'left' : str(self.positionX), 'top' : str(self.positionY) }
+        repr['thermoDeviceFile'] = self.thermoDeviceFile
+        repr['thermoDeviceDriver'] = self.thermoDeviceDriver
+        repr['volumeDeviceFile'] = self.volumeDeviceFile
+        repr['volumeDeviceDriver'] = self.volumeDeviceDriver
 
         return repr
 

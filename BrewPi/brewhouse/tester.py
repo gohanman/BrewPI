@@ -24,7 +24,11 @@ class TestingBackend(Process):
                 targetVolume=0,
                 currentTemperature=0,
                 targetTemperature=0,
-                status = "OPEN"
+                status = "OPEN",
+                thermoDeviceFile="/dev/null",
+                thermoDeviceDriver="testTemp",
+                volumeDeviceFile="/dev/null",
+                volumeDeviceDriver="testVol"
                 )
             db_session.add(k1);
 
@@ -35,7 +39,11 @@ class TestingBackend(Process):
                 targetVolume=0,
                 currentTemperature=0,
                 targetTemperature=0,
-                status = "OPEN"
+                status = "OPEN",
+                thermoDeviceFile="/dev/null",
+                thermoDeviceDriver="testTemp",
+                volumeDeviceFile="/dev/null",
+                volumeDeviceDriver="testVol"
                 )
             db_session.add(k2);
 
@@ -46,7 +54,11 @@ class TestingBackend(Process):
                 targetVolume=0,
                 currentTemperature=0,
                 targetTemperature=0,
-                status = "OPEN"
+                status = "OPEN",
+                thermoDeviceFile="/dev/null",
+                thermoDeviceDriver="testTemp",
+                volumeDeviceFile="/dev/null",
+                volumeDeviceDriver="testVol"
                 )
             db_session.add(k3);
 
@@ -85,7 +97,26 @@ class TestingBackend(Process):
             # records probably exist; that's fine
             db_session.rollback()
 
+        from BrewPi.brewhouse.sensors import temperature, volume
+        my_sensors = {} 
+        my_volume = {}
+        # initialize sensors from model definition
+        for v in Vessels.query.all():
+            class_name = v.thermoDeviceDriver
+            obj = getattr(temperature, class_name)
+            my_sensors[v.vesselID] = obj(v.thermoDeviceFile)
+
+            class_name = v.volumeDeviceDriver
+            obj = getattr(volume, class_name)
+            my_volume[v.vesselID] = obj(v.volumeDeviceFile)
         while not(self.stop.is_set()):
+
+            for v,s in my_sensors.iteritems():
+                print str(v) + ":T" + str(s.read())
+
+            for v,s in my_volume.iteritems():
+                print str(v) + ":V" + str(s.read())
+
             self.stop.wait(5)
 
         print "Tester Exiting"
